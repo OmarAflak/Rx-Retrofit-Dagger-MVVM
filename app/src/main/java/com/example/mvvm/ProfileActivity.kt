@@ -23,7 +23,7 @@ class ProfileActivity : AppCompatActivity() {
 
         compositeDisposable.add(
             userViewModel.getUserDetails("omaraflak")
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSuccess(::showUser)
                 .doOnError(::showError)
