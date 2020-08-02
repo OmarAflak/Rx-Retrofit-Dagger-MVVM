@@ -14,14 +14,14 @@ import io.reactivex.schedulers.Schedulers
 class ProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val userViewModel = UserViewModel()
-    private val compositeDispoables = CompositeDisposable()
+    private val compositeDisposable = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
 
-        compositeDispoables.add(
+        compositeDisposable.add(
             userViewModel.getUserDetails("omaraflak")
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -33,7 +33,7 @@ class ProfileActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        compositeDispoables.dispose()
+        compositeDisposable.dispose()
     }
 
     private fun showUser(user: User) {
