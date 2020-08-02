@@ -8,23 +8,32 @@ import com.example.mvvm.databinding.ActivityMainBinding
 import com.example.mvvm.entities.User
 import com.example.mvvm.models.UserViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val userViewModel = UserViewModel()
+    private val compositeDispoables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
 
-        userViewModel.getUserDetails("omaraflak")
-            .subscribeOn(Schedulers.computation())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSuccess(::showUser)
-            .doOnError(::showError)
-            .subscribe()
+        compositeDispoables.add(
+            userViewModel.getUserDetails("omaraflak")
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSuccess(::showUser)
+                .doOnError(::showError)
+                .subscribe()
+        )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDispoables.dispose()
     }
 
     private fun showUser(user: User) {
