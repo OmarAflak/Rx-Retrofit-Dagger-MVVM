@@ -14,6 +14,6 @@ class UserViewModel {
 
     fun getUserDetails(username: String) = api.getUser(username)
         .map {
-            it.copy(name = "@${it.name.toLowerCase()}")
+            it.copy(login = "@${it.login.toLowerCase()}")
         }
 }
